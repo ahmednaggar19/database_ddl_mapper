@@ -1,3 +1,7 @@
+package main.table;
+
+import main.mapper.DataTypesMap;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,7 +61,7 @@ public class Table {
         int columNamesIndex = 0;
         for (Column column : columnNames) {
             createStatement += (column.getColumnName() + " ");
-            createStatement += column.getDataType();
+            createStatement += DataTypesMap.mapDataType(column.getDataType());
             if (columNamesIndex < columnNames.size() - 1) {
                 createStatement += ",";
             }

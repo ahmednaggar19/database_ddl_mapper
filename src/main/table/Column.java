@@ -1,3 +1,5 @@
+package main.table;
+
 public class Column {
 
     private String columnName;

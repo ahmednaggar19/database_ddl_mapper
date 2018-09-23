@@ -1,3 +1,5 @@
+package main;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -51,7 +53,7 @@ public class Connector {
         Connection connection = null;
         try {
             connection = DriverManager
-                    .getConnection("jdbc:mysql://salma:3306/shopping", "nifi-cluster", "root");
+                    .getConnection("jdbc:mysql://akhaled:3306/shopping", "nada", "12345");
 
 
         } catch (SQLException e) {

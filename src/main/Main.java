@@ -1,5 +1,8 @@
-import javax.xml.crypto.Data;
-import java.sql.*;
+package main;
+
+import main.database.DatabaseMetaData;
+import main.mapper.DataTypesMap;
+
 class Main{
     public static void main(String args[]){
         try{
@@ -9,7 +12,8 @@ class Main{
 //            Statement stmt=con.createStatement();
 //            ResultSet rs=stmt.executeQuery("describe categories");
 //            ResultSetMetaData rsmd = rs.getMetaData();
-            DbMetaData metaData = DbMetaData.getInstance();
+            DataTypesMap.readMapFile("datatypesMap");
+            DatabaseMetaData metaData = DatabaseMetaData.getInstance();
 //            metaData.initPrimaryKeys();
 //            con.close();
             for (String createStatement : metaData.buildCreateStatements()) {
