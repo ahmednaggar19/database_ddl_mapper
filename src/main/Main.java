@@ -2,23 +2,26 @@ package main;
 
 import main.database.DatabaseMetaData;
 import main.mapper.DataTypesMap;
+import main.utils.Properties;
+
+import java.util.ArrayList;
 
 class Main{
     public static void main(String args[]){
         try{
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection con=DriverManager.getConnection(
-//                    "jdbc:mysql://salma:3306/shopping","nifi-cluster","root");
-//            Statement stmt=con.createStatement();
-//            ResultSet rs=stmt.executeQuery("describe categories");
-//            ResultSetMetaData rsmd = rs.getMetaData();
-            DataTypesMap.readMapFile("datatypesMap");
+            if (args.length == 0) {
+                throw new IllegalArgumentException();
+            }
+            Properties.loadProperties();
+            DataTypesMap.readMapFile(args[0]);
             DatabaseMetaData metaData = DatabaseMetaData.getInstance();
-//            metaData.initPrimaryKeys();
-//            con.close();
-            for (String createStatement : metaData.buildCreateStatements()) {
+            ArrayList<String> ddlStatements = metaData.buildCreateStatements();
+            for (String createStatement : ddlStatements) {
                 System.out.println(createStatement);
             }
-        }catch(Exception e){ System.out.println(e);}
+            metaData.executeCreateStatements(ddlStatements);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }

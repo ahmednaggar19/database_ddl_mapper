@@ -15,7 +15,7 @@ public class DataTypesMap {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] lineWords = line.split(" ");
+                String[] lineWords = line.split("\\s+");
                 if (lineWords.length > 2) {
                     System.err.print("One of the Map file lines contains more than  two datatypes!");
                     return  false;

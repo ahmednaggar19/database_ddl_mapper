@@ -8,6 +8,7 @@ import main.table.Table;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public  class DatabaseMetaData {
@@ -19,7 +20,7 @@ public  class DatabaseMetaData {
     public synchronized static DatabaseMetaData getInstance()
     {
         if(databaseMetaData ==null) {
-            Connection connection= Connector.getInstance().getSQLConnection();
+            Connection connection= Connector.getInstance().getSourceConnection();
             databaseMetaData = new DatabaseMetaData(connection);
         }
         return databaseMetaData;
@@ -55,9 +56,19 @@ public  class DatabaseMetaData {
             ResultSet columns = metaData.getColumns(null, null, tableName, "%");
             table.setColumnNames(columns);
             createStatements.add(table.buildCreateStatement());
-//            main.Util.printResultSet(columns, tables.getMetaData().getColumnCount());
+//            main.utils.Util.printResultSet(columns, tables.getMetaData().getColumnCount());
         }
         return createStatements;
+    }
+
+    public void executeCreateStatements(ArrayList<String> createStatements) throws SQLException {
+        Connection connection = Connector.getInstance().getDestinationConnection();
+        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+//        statement.setFetchSize(Integer.MIN_VALUE);
+        for (String createStatement : createStatements) {
+            statement.execute(createStatement);
+        }
+        return;
     }
 
 

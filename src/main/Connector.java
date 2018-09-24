@@ -5,14 +5,12 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+import main.utils.Properties;
 
 public class Connector {
 
-    public static final String CONFIG_PROPERTIES = "conf.properties";
-
-    private static Connection hiveConnection = null;
-    private static Connection sqlConnection=null;
+    private static Connection sourceConnection = null;
+    private static Connection destinationConnection = null;
     private static Connector connector=null;
 
     private Connector(){}
@@ -24,36 +22,35 @@ public class Connector {
     }
 
 
-    public  Connection getSQLConnection() {
-        Properties properties = loadProperties();
+    public  Connection getSourceConnection() {
 
-        if (this.sqlConnection == null) {
-            this.sqlConnection = getConnection(properties.getProperty("DRIVER_NAME"), properties.getProperty("CONNECTION_STRING"),
-                    properties.getProperty("USER"), properties.getProperty("PASS"));
+        if (this.sourceConnection == null) {
+            this.sourceConnection = getConnection(Properties.getProperty("source.driver"), Properties.getProperty("source.connection"),
+                    Properties.getProperty("source.server.name"), Properties.getProperty("source.server.password"));
         }
-        return sqlConnection;
+        return sourceConnection;
     }
 
-    public  Connection getHiveConnection() {
-        Properties properties = loadProperties();
-        if (this.hiveConnection == null) {
-            this.hiveConnection = getConnection(properties.getProperty("hive.driver"), properties.getProperty("hive.server"),
-                    properties.getProperty("hive.server.name"), properties.getProperty("hive.server.password"));
-        }
-        return hiveConnection;
-    }
 
+    public  Connection getDestinationConnection() {
+        if (this.destinationConnection == null) {
+            this.destinationConnection = getConnection(Properties.getProperty("destination.driver"), Properties.getProperty("destination.connection"),
+                    Properties.getProperty("destination.server.name"), Properties.getProperty("destination.server.password"));
+        }
+        return destinationConnection;
+    }
 
     public static Connection getConnection(String driver, String server, String userName, String password) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+//            System.out.println(driver.substring(1, driver.length() - 1));
+            Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         Connection connection = null;
         try {
             connection = DriverManager
-                    .getConnection("jdbc:mysql://akhaled:3306/shopping", "nada", "12345");
+                    .getConnection(server, userName, password);
 
 
         } catch (SQLException e) {
@@ -61,19 +58,6 @@ public class Connector {
             e.printStackTrace();
         }
         return connection;
-    }
-
-    public static Properties loadProperties() {
-        Properties properties = new Properties();
-        InputStream inputStream = Connector.class.getClassLoader().getResourceAsStream(CONFIG_PROPERTIES);
-        if (inputStream != null) {
-            try {
-                properties.load(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return properties;
     }
 }
 

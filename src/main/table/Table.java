@@ -1,6 +1,7 @@
 package main.table;
 
 import main.mapper.DataTypesMap;
+import main.utils.Properties;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,6 +78,12 @@ public class Table {
             primaryKeyIndex++;
         }
         createStatement += "))";
+        if (!Properties.getProperty("destination.storage.type").isEmpty()) {
+            createStatement += "stored as " + Properties.getProperty("destination.storage.type");
+        }
+        if (!Properties.getProperty("destination.storage.conf").isEmpty()) {
+            createStatement += " " + Properties.getProperty("destination.storage.conf");
+        }
         return createStatement;
     }
 }
