@@ -7,8 +7,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to use as a mapper between 2 different database data types.
+ */
 public class DataTypesMap {
-
+    /**
+     * data types map, key is a source database data type, value is the corresponding destinatio database data type.
+     */
     private static Map<String, String> dataTypesMap = new HashMap<>();
 
     public static boolean readMapFile(String file) {
@@ -34,6 +39,11 @@ public class DataTypesMap {
         return true;
     }
 
+    /**
+     * Gets the corresponding destination data type for a given source database data type
+     * @param dataType source database data type
+     * @return
+     */
     public static String mapDataType (String dataType) {
         if (!dataTypesMap.containsKey(dataType)) {
             return dataType;

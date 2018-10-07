@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Table class containing Table info as well as util method to build a create statement for that table.
+ */
 public class Table {
 
     private String tableName;
@@ -55,6 +58,11 @@ public class Table {
         this.primaryKey = primaryKeyNames;
     }
 
+    /**
+     * Builds a create statement for this table, putting into consideration the mapping between data types between source
+     * and destination.
+     * @return String containing the create statement
+     */
     public String buildCreateStatement() {
         String createStatement = "CREATE TABLE ";
         createStatement += tableName;

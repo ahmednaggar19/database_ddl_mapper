@@ -1,5 +1,9 @@
 package main.table;
 
+/**
+ * Column Class containing Column Info
+ */
+
 public class Column {
 
     private String columnName;

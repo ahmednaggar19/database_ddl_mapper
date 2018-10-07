@@ -11,10 +11,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * Class for dealing with database meta data.
+ */
 public  class DatabaseMetaData {
-//    private HashMap<String, PKey> primaryKeys;
-//    private HashMap<String, HashMap<String,FKey>> foreignKeys;
+    /**
+     * Meta Data object
+     */
     java.sql.DatabaseMetaData metaData;
+    /**
+     * Singleton Object
+     */
     static DatabaseMetaData databaseMetaData;
 
     public synchronized static DatabaseMetaData getInstance()
@@ -28,19 +35,18 @@ public  class DatabaseMetaData {
     private DatabaseMetaData(Connection connection) {
         try {
             metaData = connection.getMetaData();
-//            primaryKeys=new HashMap<>();
-//            foreignKeys=new HashMap<>();
-//            initPrimaryKeys();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
 
     }
-    public void initDatawarehouse(String dataWareHouseName) {
 
-    }
-
+    /**
+     * Builds create table statements for the destination database.
+     * @return ArrayList of string create statements
+     * @throws SQLException
+     */
     public ArrayList<String> buildCreateStatements() throws SQLException {
         ResultSet tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
         ArrayList<String> createStatements = new ArrayList<>();
@@ -61,10 +67,14 @@ public  class DatabaseMetaData {
         return createStatements;
     }
 
+    /**
+     * Executes the create statements on the destination database.
+     * @param createStatements the create statements to be executed
+     * @throws SQLException
+     */
     public void executeCreateStatements(ArrayList<String> createStatements) throws SQLException {
         Connection connection = Connector.getInstance().getDestinationConnection();
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-//        statement.setFetchSize(Integer.MIN_VALUE);
         for (String createStatement : createStatements) {
             statement.execute(createStatement);
         }
